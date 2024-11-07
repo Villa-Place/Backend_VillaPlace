@@ -9,6 +9,6 @@ const UserSchema: Schema = new Schema({
   no_telepon: { type: String, required: true },
   role: { type: String, enum: ["user", "owner", "admin"], default: "user" }, // Set default ke 'user'
   foto_profile: { type: String, default: "default.png" },
-});
+}, { timestamps: true});
 
 export default mongoose.model<IUser>("User", UserSchema);

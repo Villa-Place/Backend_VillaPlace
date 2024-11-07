@@ -4,13 +4,13 @@ import {
   logoutUser,
   registerUser,
   loginUser,
-} from "../controllers/authUserController";
+} from "../controllers/auth/authUserController";
 import {
   loginOwner,
   logoutOwner,
   registerOwner,
-} from "../controllers/authOwnerController";
-import { loginAdmin, logoutAdmin } from "../controllers/authAdminController";
+} from "../controllers/auth/authOwnerController";
+import { loginAdmin, logoutAdmin } from "../controllers/auth/authAdminController";
 
 const router = express.Router();
 

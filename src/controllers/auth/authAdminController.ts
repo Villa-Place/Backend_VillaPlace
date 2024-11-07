@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import Admin from "../models/admin";
+import { Admin } from "../../models/admin";
 
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 

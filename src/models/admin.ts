@@ -1,12 +1,27 @@
-import mongoose, { Document, Schema } from "mongoose";
-import bcrypt from "bcryptjs";
+import mongoose, { Schema, Document } from "mongoose";
 import { IAdmin } from "../types/admin";
 
-const adminSchema = new Schema<IAdmin>({
-  nama: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  password: { type: String, required: true },
-  foto_profile: { type: String, default: "default.png" },
-});
+const adminSchema = new Schema<IAdmin>(
+  {
+    nama: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    no_telepon: {
+      type: String,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+    foto_profile: { type: String, default: "default.png" },
+  },
+  { timestamps: true },
+);
 
-export default mongoose.model<IAdmin>("Admin", adminSchema);
+export const Admin = mongoose.model<IAdmin>("Admin", adminSchema);

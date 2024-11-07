@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { Pesanan } from "../models/pesananModel";
+import { Pesanan } from "../../models/pesananModel";
 
 const PesananController = {
   getAllPesanan: async (req: Request, res: Response): Promise<any> => {

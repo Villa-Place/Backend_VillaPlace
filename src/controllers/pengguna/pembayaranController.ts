@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { Pembayaran } from "../models/pembayaranModel";
-import { Pesanan } from "../models/pesananModel";
+import { Pembayaran } from "../../models/pembayaranModel";
+import { Pesanan } from "../../models/pesananModel";
 
 const midtransClient = require("midtrans-client");
 const cron = require("node-cron");

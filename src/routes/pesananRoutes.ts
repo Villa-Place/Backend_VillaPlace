@@ -12,7 +12,7 @@ const {
   createPesanan,
   updatePesanan,
   deletePesanan,
-} = require("../controllers/pesananController");
+} = require("../controllers/pengguna/pesananController");
 
 route.get("/", getAllPesanan);
 route.post("/", verifyUserLogin, createPesanan);

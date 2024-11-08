@@ -5,7 +5,7 @@ const {
   getAllFavorite,
   createFavorite,
   deleteFavorite,
-} = require("../controllers/favoriteController");
+} = require("../controllers/pengguna/favoriteController");
 router.get("/", verifyUserLogin, getAllFavorite);
 router.post("/", verifyUserLogin, createFavorite);
 router.delete("/:id", verifyUserLogin, deleteFavorite);

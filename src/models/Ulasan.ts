@@ -5,9 +5,13 @@ const ulasanSchema: Schema = new Schema(
   {
     komentar: { type: String, required: true },
     rating: { type: Number, required: true },
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     villa: {
-      type: Schema.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Villa",
       required: true,
     },

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import Owner from "../models/ownerModel";
+import Owner from "../../models/ownerModel";
 const JWT_SECRET = process.env.JWT_SECRET || "your_jwt_secret";
 
 //! Fungsi untuk register owner

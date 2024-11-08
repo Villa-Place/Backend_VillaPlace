@@ -8,7 +8,7 @@ createAdmin,
   getAdminById,
   updateAdminById,
   deleteAdminById,
-} = require("../controllers/adminController");
+} = require("../controllers/admin/adminController");
 
 router.post("/", createAdmin);
 router.get("/", verifyAdmin, getAllAdmins);

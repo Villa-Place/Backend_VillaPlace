@@ -1,8 +1,6 @@
 import { Request, Response } from "express";
 import { Villa } from "../models/villaModel";
 import { VillaPhoto } from "../models/villaPhotoModel";
-import { Ulasan } from "../models/Ulasan";
-
 import fs from "fs";
 import path from "path";
 
@@ -13,30 +11,41 @@ const VillaController = {
 
       let query: any = {};
 
+      // Tambahkan filter kategori jika ada
       if (kategori) {
         query.kategori = kategori;
       }
 
+      // Tambahkan filter lokasi jika ada
       if (lokasi) {
         query.lokasi = lokasi;
       }
 
+      // Tambahkan filter harga_min jika ada
       if (harga_min) {
         query.harga = { ...query.harga, $gte: Number(harga_min) };
       }
 
+      // Tambahkan filter harga_max jika ada
       if (harga_max) {
         query.harga = { ...query.harga, $lte: Number(harga_max) };
       }
 
-      const villas = await Villa.find(query)
-        .populate("pemilik_villa")
-        .populate("foto_villa")
-        .exec();
-
+      const villas = await Villa.find(query).populate([
+        {
+          path: "ulasan",
+          populate: {
+            path: "user",
+            select: "nama",
+          },
+        },
+        "pemilik_villa",
+        "pesanan",
+        "foto_villa",
+      ]);
       return res.status(200).json({
         status: "success",
-        message: "Successfully fetched all villas with reviews",
+        message: "Success get all villas",
         data: villas,
       });
     } catch (error) {
@@ -51,41 +60,25 @@ const VillaController = {
   getVillaById: async (req: Request, res: Response) => {
     try {
       const villa = await Villa.findById(req.params.id).populate([
+        {
+          path: "ulasan",
+          populate: {
+            path: "user",
+          },
+        },
         "pemilik_villa",
-        "foto_villa",
+        "pesanan",
       ]);
-
       if (!villa) {
         return res.status(404).json({
           status: "error",
           message: "Villa not found",
         });
       }
-      const ulasans = await Ulasan.find({ villa: req.params.id })
-        .populate("user", "nama email foto_profile")
-        .exec();
-      const totalRating = ulasans.reduce(
-        (sum, ulasan) => sum + ulasan.rating,
-        0,
-      );
-      const averageRating =
-        ulasans.length > 0 ? totalRating / ulasans.length : 0;
-
-      const commentCount = ulasans.length;
       return res.status(200).json({
         status: "success",
         message: "Success get villa by id",
-        data: {
-          ...villa.toObject(),
-          averageRating: averageRating,
-          commentCount: commentCount,
-          ulasan: ulasans.map((ulasan) => ({
-            komentar: ulasan.komentar,
-            rating: ulasan.rating,
-            user: ulasan.user,
-            _id: ulasan._id,
-          })),
-        },
+        data: villa,
       });
     } catch (error) {
       console.log(error);
@@ -119,7 +112,7 @@ const VillaController = {
       const updatedVilla = await Villa.findByIdAndUpdate(
         req.params.id,
         req.body,
-        { new: true },
+        { new: true }
       );
       if (!updatedVilla) {
         return res.status(404).json({
@@ -185,13 +178,13 @@ const VillaController = {
             filepath: file.path,
           });
           return photo._id; // Mengembalikan ID foto yang baru dibuat
-        }),
+        })
       );
 
       const villa = await Villa.findByIdAndUpdate(
         villaId,
         { $push: { foto_villa: { $each: photos } } },
-        { new: true },
+        { new: true }
       );
 
       if (!villa) {
@@ -249,7 +242,7 @@ const VillaController = {
 
       // Periksa apakah photoId ada di dalam array photos
       const isPhotoExist = villa.foto_villa.some(
-        (photo) => photo.toString() === photoId,
+        (photo) => photo.toString() === photoId
       );
 
       if (!isPhotoExist) {
@@ -277,7 +270,7 @@ const VillaController = {
 
       // Hapus ID foto dari array photos di dokumen villa
       villa.foto_villa = villa.foto_villa.filter(
-        (image) => image.toString() !== photoId,
+        (image) => image.toString() !== photoId
       );
       await villa.save();
 

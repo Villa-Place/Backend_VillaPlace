@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Ulasan } from "../../models/Ulasan";
+import { Villa } from "../../models/villaModel";
 
 const UlasanController = {
   getAllUlasan: async (req: Request, res: Response) => {
@@ -20,10 +21,27 @@ const UlasanController = {
 
   createUlasan: async (req: Request, res: Response) => {
     try {
-    const newUlasan = new Ulasan(req.body);
+      const { villa, komentar, rating, user } = req.body;
 
+      if (!villa) {
+        return res.status(400).json({
+          status: "error",
+          message: "Villa ID is required.",
+        });
+      }
+  
+      const newUlasan = new Ulasan({
+        komentar,
+        rating,
+        user,
+        villa,
+      });
+  
       await newUlasan.save();
-      
+  
+      await Villa.findByIdAndUpdate(villa, {
+        $push: { ulasan: newUlasan._id },
+      });
       return res.status(201).json({
         status: "success",
         message: "Success add new ulasan",
@@ -77,6 +95,7 @@ const UlasanController = {
           message: "Ulasan not found",
         });
       }
+    
       return res.status(200).json({
         status: "success",
         message: "Success update ulasan by id",
@@ -100,6 +119,9 @@ const UlasanController = {
           message: "Ulasan not found",
         });
       }
+      await Villa.findByIdAndUpdate(deletedUlasan.villa, {
+        $pull: { ulasan: deletedUlasan._id },
+      });
       return res.status(200).json({
         status: "success",
         message: "Success delete ulasan by id",

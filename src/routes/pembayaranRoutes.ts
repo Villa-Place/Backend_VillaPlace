@@ -6,7 +6,7 @@ const {
   updatePembayaran,
   deletePembayaran,
   prosesPembayaran,
-} = require("../controllers/pembayaranController");
+} = require("../controllers/pengguna/pembayaranController");
 
 const router = Router();
 

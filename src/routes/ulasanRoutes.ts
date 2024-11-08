@@ -7,7 +7,7 @@ const {
   getUlasanById,
   updateUlasanById,
   deleteUlasan,
-} = require("../controllers/ulasanController");
+} = require("../controllers/pengguna/ulasanController");
 const {
   verifyUserLogin,
 } = require("../middleware/verifyToken");

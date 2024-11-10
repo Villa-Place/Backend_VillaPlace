@@ -20,8 +20,7 @@ const VillaSchema: Schema = new Schema(
       ref: "Owner",
       required: true,
     },
-    ulasan: [{ type: mongoose.Schema.Types.ObjectId, ref: "Ulasan" }],
-    pesanan: [{ type: mongoose.Schema.Types.ObjectId, ref: "Pesanan" }],
+    status: { type: String, required: true, default:"pending" },
   },
   { timestamps: true }
 );

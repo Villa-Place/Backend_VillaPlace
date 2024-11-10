@@ -5,7 +5,7 @@ const favoriteController = {
   getAllFavorite: async (req: Request, res: Response) => {
     try {
       const pesanan = await Favorite.find().populate({
-        path: "id_villa",
+        path: "villa",
         populate: [
           {
             path: "kategori",

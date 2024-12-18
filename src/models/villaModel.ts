@@ -43,8 +43,6 @@ VillaSchema.pre("deleteMany", async function (next) {
     await VillaPhoto.deleteMany({ villa: { $in: ids } });
     await Pesanan.deleteMany({ villa: { $in: ids } });
 
-    console.log(`Related villa photos for villas ${ids} have been deleted.`);
-
     next();
   } catch (error) {
     console.log(error);

@@ -30,7 +30,6 @@ pesananSchema.pre("deleteMany", async function (next) {
     const ids = pesananIds.map((pesanan) => pesanan._id);
 
     await Pembayaran.deleteMany({ pesanan: { $in: ids } });
-    console.log(`Related payments for orders ${ids} have been deleted.`);
     next();
   } catch (error) {
     console.log(error);

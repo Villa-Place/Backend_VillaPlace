@@ -1,0 +1,37 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches:
+      - main # Tentukan branch yang akan memicu deploy (misal main)
+
+jobs:
+  vercel-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout repositori
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # Set up Node.js (jika menggunakan Node.js atau aplikasi berbasis JS)
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18" # Ganti dengan versi Node.js yang Anda gunakan
+
+      # Install dependencies (hanya jika menggunakan npm/yarn)
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      # Deploy ke Vercel menggunakan Vercel Action
+      - name: Deploy to Vercel
+        uses: amondnet/vercel-action@v20
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }} # Token Vercel Anda
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }} # ID organisasi di Vercel
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }} # ID project di Vercel
+          vercel-args: "--prod" # Gunakan --prod untuk production

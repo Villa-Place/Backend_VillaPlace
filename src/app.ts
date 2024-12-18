@@ -5,6 +5,8 @@ import dotenv from "dotenv";
 import path from "path";
 import cookieParser from "cookie-parser";
 
+import { Request, Response } from "express";
+
 import "./schedulers/updateStatusPesanan";
 import "./schedulers/updateStatusPembayaran";
 
@@ -55,5 +57,17 @@ app.use(
 
 // Routes
 app.use("/api", router);
+
+router.get("/", (req: Request, res: Response) => {
+  res.send("Hello from express");
+});
+
+// Route jika tidak ada route yang terdaftar
+app.use((req, res) => {
+  res.status(404).json({
+    status: "Failed",
+    message: "Resource not found",
+  });
+});
 
 export default app;

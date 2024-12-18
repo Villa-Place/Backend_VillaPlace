@@ -14,7 +14,7 @@ export const main = async () => {
   try {
     // Koneksi ke database
     await mongoose.connect(
-      process.env.MONGODB_URI || "mongodb://localhost:27017/villaplace"
+      process.env.MONGO_URI || "mongodb://localhost:27017/villaplace"
     );
     console.log("Connected to MongoDB");
 

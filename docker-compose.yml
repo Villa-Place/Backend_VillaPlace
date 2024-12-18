@@ -1,0 +1,25 @@
+services:
+  # Service aplikasi Node.js
+  app:
+    build: .
+    ports:
+      - "8000:3000"
+    environment:
+      - MONGODB_URI=mongodb+srv://feryyuliarahman11:villaPlace@cluster0.jjoun.mongodb.net/villa-place
+    depends_on:
+      - mongo
+    volumes:
+      - .:/app
+      - /app/node_modules
+
+  # Service MongoDB
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+# Volume untuk menyimpan data MongoDB
+volumes:
+  mongo-data:

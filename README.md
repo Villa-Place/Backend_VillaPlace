@@ -1,6 +1,13 @@
 # Backend VillaPlace
 
-Backend untuk aplikasi VillaPlace yang dibangun menggunakan **Express.js**, **TypeScript**, dan **MongoDB** dengan **Mongoose** sebagai ODM.
+[![Deploy](https://github.com/Villa-Place/Backend_VillaPlace/actions/workflows/main.yml/badge.svg)](https://github.com/Villa-Place/Backend_VillaPlace/actions/workflows/main.yml)
+
+VillaPlace Backend adalah layanan server-side yang menyediakan API untuk mendukung aplikasi VillaPlace, sebuah platform persewaan villa yang memungkinkan pengguna untuk mencari, menyewa, dan memberikan ulasan pada villa. Aplikasi Backend Villa Place ini dibangun menggunakan **Express.js**, **TypeScript**, **JWT**, **JEST** dan **MongoDB** dengan **Mongoose** sebagai ODM.
+
+## Link Website
+
+Aplikasi backend VillaPlace dapat diakses melalui link berikut:  
+**[https://backend-villaplace.vercel.app](https://backend-villaplace.vercel.app)**
 
 ## Prasyarat
 
@@ -54,3 +61,20 @@ npm start
 
 
 Ini akan menjalankan server di http://localhost:3000.
+
+## End Point API
+
+API Backend VillaPlace menyediakan berbagai endpoint untuk mendukung operasional aplikasi. Berikut adalah daftar endpoint utamanya:
+
+![Screenshot End Point Api VillaPlace](src/assets/img/screenshots/ss1.png)
+
+## Unit Testing
+
+Proyek ini menggunakan Jest untuk pengujian unit dan integrasi. Screenshot hasil pengujian unit:
+
+![Screenshot Hasil Unit Testing](src/assets/img/screenshots/ss2.png)
+
+
+
+
+

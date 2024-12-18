@@ -6,11 +6,13 @@ import app from "../app";
 import { Villa } from "../models/villaModel";
 import Owner from "../models/ownerModel";
 import bcrypt from "bcrypt";
+import { Admin } from "../models/adminModel"; // Import model Admin
 
 describe("Villa API Endpoints", () => {
   let mongoServer: MongoMemoryServer;
   let villaId: string; // Untuk menyimpan ID villa
   let tokenOwner: string;
+  let tokenAdmin: string;
 
   const villaData = [
     {
@@ -47,24 +49,37 @@ describe("Villa API Endpoints", () => {
     await mongoose.connect(mongoUri);
 
     // Insert data villa untuk keperluan testing
-    const villas = await Villa.insertMany(villaData);
-    villaId = villas[0]._id as string;
+    const villa = await Villa.insertMany(villaData);
+    villaId = villa[0]._id as string;
 
     // Buat token owner untuk testing
     const owner = new Owner({
       nama: "Owner Test",
       email: "owner@test.com",
-      password: await bcrypt.hash("123456", 10),
+      password: await bcrypt.hash("12345678", 10),
       no_telepon: "08123456789",
     });
     await owner.save();
 
     const response = await request(app).post("/api/auth/owner/login").send({
       email: "owner@test.com",
-      password: "123456",
+      password: "12345678",
     });
 
     tokenOwner = response.body.token;
+
+    await Admin.create({
+      nama: "Admin Utama",
+      email: "admin@test.com",
+      password: await bcrypt.hash("12345678", 10),
+    });
+
+    const dataAdmin = await request(app).post("/api/auth/admin/login").send({
+      email: "admin@test.com",
+      password: "12345678",
+    });
+
+    tokenAdmin = dataAdmin.body.token;
   });
 
   afterAll(async () => {
@@ -74,9 +89,68 @@ describe("Villa API Endpoints", () => {
     await mongoServer.stop();
   });
 
-  describe("GET /villas", () => {
-    it("should return all villas with status 200", async () => {
+  describe("GET /villa", () => {
+    it("should return all villa with status 200", async () => {
       const response = await request(app).get("/api/villa");
+
+      expect(response.status).toBe(200);
+      expect(response.body.status).toBe("success");
+      expect(Array.isArray(response.body.data)).toBe(true);
+      expect(response.body.data.length).toBe(2);
+
+      expect(response.body.data[0]).toHaveProperty("nama", "Villa Indah");
+      expect(response.body.data[1]).toHaveProperty("nama", "Villa Mewah");
+    });
+
+    it("should return filtered villas based on searchQuery", async () => {
+      const response = await request(app)
+        .get("/api/villa")
+        .query({ searchQuery: "Bali" });
+
+      console.log(response.body.data, "ini response");
+
+      expect(response.status).toBe(200);
+      expect(response.body.status).toBe("success");
+      expect(Array.isArray(response.body.data)).toBe(true);
+      expect(response.body.data.length).toBe(1);
+      expect(response.body.data[0]).toHaveProperty("lokasi", "Bali");
+    });
+
+    it("should return filtered villas based on harga_min and harga_max", async () => {
+      const response = await request(app).get("/api/villa").query({
+        harga_min: 2000000,
+        harga_max: 3000000,
+      });
+
+      expect(response.status).toBe(200);
+      expect(response.body.status).toBe("success");
+      expect(response.body.data).toBeDefined();
+      response.body.data.forEach((villa: any) => {
+        expect(villa.harga).toBeGreaterThanOrEqual(2000000);
+        expect(villa.harga).toBeLessThanOrEqual(3000000);
+      });
+    });
+  });
+  describe("GET /villa/owner", () => {
+    it("should return all villa Owner with status 200", async () => {
+      const response = await request(app)
+        .get("/api/villa")
+        .set("Cookie", `tokenOwner=${tokenOwner}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.status).toBe("success");
+      expect(Array.isArray(response.body.data)).toBe(true);
+      expect(response.body.data.length).toBe(2);
+
+      expect(response.body.data[0]).toHaveProperty("nama", "Villa Indah");
+      expect(response.body.data[1]).toHaveProperty("nama", "Villa Mewah");
+    });
+  });
+  describe("GET /villa/admin", () => {
+    it("should return all villa Admin with status 200", async () => {
+      const response = await request(app)
+        .get("/api/villa")
+        .set("Cookie", `tokenAdmin=${tokenAdmin}`);
 
       expect(response.status).toBe(200);
       expect(response.body.status).toBe("success");
@@ -88,7 +162,7 @@ describe("Villa API Endpoints", () => {
     });
   });
 
-  describe("GET /villas/:id", () => {
+  describe("GET /villa/:id", () => {
     it("should return villa detail by ID with status 200", async () => {
       const response = await request(app).get(`/api/villa/${villaId}`);
 
@@ -117,7 +191,7 @@ describe("Villa API Endpoints", () => {
     });
   });
 
-  describe("POST /villas", () => {
+  describe("POST /villa", () => {
     it("should create a new villa with status 201", async () => {
       const newVilla = {
         nama: "Villa Baru",
@@ -148,7 +222,7 @@ describe("Villa API Endpoints", () => {
     });
   });
 
-  describe("PUT /villas/:id", () => {
+  describe("PUT /villa/:id", () => {
     it("should update villa by ID with status 200", async () => {
       const updatedVilla = {
         nama: "Villa Indah Updated",
@@ -178,7 +252,7 @@ describe("Villa API Endpoints", () => {
     });
   });
 
-  describe("DELETE /villas/:id", () => {
+  describe("DELETE /villa/:id", () => {
     it("should delete villa by ID with status 200", async () => {
       const response = await request(app)
         .delete(`/api/villa/${villaId}`)

@@ -57,6 +57,22 @@ describe("Admin API Endpoints", () => {
       expect(response.body.status).toBe("success");
       expect(response.body.data).toHaveProperty("nama", newAdmin.nama);
     });
+
+    it("should return 400 if email already exists", async () => {
+      const newAdmin = {
+        nama: "Admin Baru",
+        email: "admin@test.com",
+        password: "adminpassword",
+      };
+
+      const response = await request(app)
+        .post("/api/admin")
+        .set("Cookie", `tokenAdmin=${tokenAdmin}`)
+        .send(newAdmin);
+
+      expect(response.status).toBe(400);
+      expect(response.body.status).toBe("error");
+    });
   });
 
   describe("GET /api/admin", () => {
@@ -111,6 +127,19 @@ describe("Admin API Endpoints", () => {
 
       expect(response.status).toBe(200);
       expect(response.body.status).toBe("Success");
+    });
+
+    it("should return 400 if current password is incorrect", async () => {
+      const response = await request(app)
+        .put("/api/admin/change-password")
+        .set("Cookie", `tokenAdmin=${tokenAdmin}`)
+        .send({
+          currentPassword: "wrongpassword",
+          newPassword: "newpassword123",
+        });
+
+      expect(response.status).toBe(400);
+      expect(response.body.status).toBe("Failed");
     });
   });
 

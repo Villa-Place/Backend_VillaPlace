@@ -1342,17 +1342,17 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "old_password": {
+                  "currentPassword": {
                     "type": "string"
                   },
-                  "new_password": {
+                  "newPassword": {
                     "type": "string"
                   }
                 }
               },
               "example": {
-                "old_password": "password",
-                "new_password": "newpassword"
+                "currentPassword": "password",
+                "newPassword": "newpassword"
               }
             }
           }
@@ -1922,17 +1922,17 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "old_password": {
+                  "currentPassword": {
                     "type": "string"
                   },
-                  "new_password": {
+                  "newPassword": {
                     "type": "string"
                   }
                 }
               },
               "example": {
-                "old_password": "password",
-                "new_password": "newpassword"
+                "currentPassword": "password",
+                "newPassword": "newpassword"
               }
             }
           }
@@ -6997,10 +6997,93 @@
           "Admin"
         ],
         "description": "",
-        "parameters": [],
+        "parameters": [
+          {
+            "name" : "range",
+            "in": "query",
+            "description": "Range date",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }            
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Show all data dashboard",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "ownerCount": {
+                          "type": "integer"
+                        },
+                        "userCount": {
+                          "type": "integer"
+                        },
+                        "pesananCount": {
+                          "type": "integer"
+                        },
+                        "villaCount": {
+                          "type": "integer"
+                        },
+                        "total_keseluruhan": {
+                          "type": "integer"
+                        },
+                        "payemnt_data": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "bulan": {
+                                "type": "string"
+                              },
+                              "count": {
+                                "type": "integer"
+                              },
+                              "total_pembayaran": {
+                                "type": "integer"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "description": "Success get all data dashboard",
+                    "value": {
+                      "status": "success",
+                      "data": {
+                        "ownerCount": 1,
+                        "userCount": 1,
+                        "pesananCount": 1,
+                        "villaCount": 1,
+                        "total_keseluruhan": 1000000,
+                        "payemnt_data": [
+                          {
+                            "bulan": "Januari",
+                            "count": 1,
+                            "total_pembayaran": 1000000
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
+            
           }
         },
         "security": [
@@ -7019,7 +7102,25 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Get current admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Admin"
+                },
+                "examples": {
+                  "success": {
+                    "description": "Success get current admin",
+                    "value": {
+                      "id": 1,
+                      "name": "Admin",
+                      "email": "admin@gmail.com",                      
+                      "foto_profile": "https://example.com/admin"
+                    }
+                  }
+                }
+              }
+            }          
           }
         },
         "security": [
@@ -7035,10 +7136,59 @@
           "Admin"
         ],
         "description": "",
-        "parameters": [],
+
+        "parameters": [
+          
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "currentPassword": {
+                    "type": "string"
+                  },
+                  "newPassword": {
+                    "type": "string"
+                  }
+                },
+                "example": {
+                  "currentPassword": "password",
+                  "newPassword": "newpassword"
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Change password admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "description": "Success change password admin",
+                    "value": {
+                      "status": "success",
+                      "message": "Success change password admin"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -7057,7 +7207,26 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Get current owner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Owner"
+                },
+                "examples": {
+                  "success": {
+                    "description": "Success get current owner",
+                    "value": {
+                      "id": 1,
+                      "name": "Owner",
+                      "email": "owner@gmail.com",
+                      "no_telepon": "081234567890",
+                      "foto_profile": "https://example.com/owner"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
 
@@ -7077,7 +7246,77 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Get all pembayaran by user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Pembayaran"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "description": "Success get all pembayaran by user",
+                    "value": {
+                      "status": "success",
+                      "data": [
+                        {
+                          "id": 1,
+                          "tanggal_pembayaran": "2021-01-01",
+                          "total_pembayaran": 1000000,
+                          "status_pembayaran": "Success",
+                          "pesanan": {
+                            "id": 1,
+                            "tanggal_checkin": "2021-01-01",
+                            "tanggal_checkout": "2021-01-02",
+                            "jumlah_tamu": 2,
+                            "total_harga": 1000000,
+                            "villa": {
+                              "id": 1,
+                              "nama": "Villa 1",
+                              "deskripsi": "Villa 1",
+                              "lokasi": "Bandung",
+                              "kategori": [
+                                "Private Pool",
+                                "Family",
+                                "Luxury"
+                              ],
+                              "fasilitas": [
+                                "Wifi",
+                                "TV",
+                                "AC"
+                              ],
+                              "harga": 1000000,
+                              "foto_villa": [
+                                {
+                                  "id": 1,
+                                  "foto": "https://example.com/villa1"
+                                },
+                                {
+                                  "id": 2,
+                                  "foto": "https://example.com/villa2"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+
+            
           }
         },
         "security": [
@@ -7096,7 +7335,75 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Get all pembayaran by owner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Pembayaran"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "description": "Success get all pembayaran by owner",
+                    "value": {
+                      "status": "success",
+                      "data": [
+                        {
+                          "id": 1,
+                          "tanggal_pembayaran": "2021-01-01",
+                          "total_pembayaran": 1000000,
+                          "status_pembayaran": "Success",
+                          "pesanan": {
+                            "id": 1,
+                            "tanggal_checkin": "2021-01-01",
+                            "tanggal_checkout": "2021-01-02",
+                            "jumlah_tamu": 2,
+                            "total_harga": 1000000,
+                            "villa": {
+                              "id": 1,
+                              "nama": "Villa 1",
+                              "deskripsi": "Villa 1",
+                              "lokasi": "Bandung",
+                              "kategori": [
+                                "Private Pool",
+                                "Family",
+                                "Luxury"
+                              ],
+                              "fasilitas": [
+                                "Wifi",
+                                "TV",
+                                "AC"
+                              ],
+                              "harga": 1000000,
+                              "foto_villa": [
+                                {
+                                  "id": 1,
+                                  "foto": "https://example.com/villa1"
+                                },
+                                {
+                                  "id": 2,
+                                  "foto": "https://example.com/villa2"
+                                }
+                              ]
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -7115,7 +7422,51 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Get chart pembayaran",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "bulan": {
+                            "type": "string"
+                          },
+                          "count": {
+                            "type": "integer"
+                          },
+                          "total_pembayaran": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "description": "Success get chart pembayaran",
+                    "value": {
+                      "status": "success",
+                      "data": [
+                        {
+                          "bulan": "Januari",
+                          "count": 1,
+                          "total_pembayaran": 1000000
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -7133,9 +7484,109 @@
         ],
         "description": "",
         "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "integer"
+                  },
+                  "tanggal_checkin": {
+                    "type": "string"
+                  },
+                  "tanggal_checkout": {
+                    "type": "string"
+                  },
+                  "jumlah_tamu": {
+                    "type": "integer"
+                  },
+                  "total_harga": {
+                    "type": "integer"
+                  },
+                  "id_villa": {
+                    "type": "integer"
+                  },
+                  "id_pengguna": {
+                    "type": "integer"
+                  }
+                },
+                "example": {
+                  "tanggal_checkin": "2021-01-01",
+                  "tanggal_checkout": "2021-01-02",
+                  "jumlah_tamu": 2,
+                  "total_harga": 1000000,
+                  "id_villa": 1,
+                  "id_pengguna": 1
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Create pesanan owner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "tanggal_checkin": {
+                          "type": "string"
+                        },
+                        "tanggal_checkout": {
+                          "type": "string"
+                        },
+                        "jumlah_tamu": {
+                          "type": "integer"
+                        },
+                        "total_harga": {
+                          "type": "integer"
+                        },
+                        "id_villa": {
+                          "type": "integer"
+                        },
+                        "id_pengguna": {
+                          "type": "integer"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "description": "Success create pesanan owner",
+                    "value": {
+                      "status": "success",
+                      "message": "Success create pesanan owner",
+                      "data": {
+                        "id": 1,
+                        "tanggal_checkin": "2021-01-01",
+                        "tanggal_checkout": "2021-01-02",
+                        "jumlah_tamu": 2,
+                        "total_harga": 1000000,
+                        "id_villa": 1,
+                        "id_pengguna": 1
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -7155,7 +7606,76 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Get all pesanan by owner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Pesanan"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "description": "Success get all pesanan by owner",
+                    "value": {
+                      "status": "success",
+                      "data": [
+                        {
+                          "id": 1,
+                          "tanggal_checkin": "2021-01-01",
+                          "tanggal_checkout": "2021-01-02",
+                          "jumlah_tamu": 2,
+                          "total_harga": 1000000,
+                          "villa": {
+                            "id": 1,
+                            "nama": "Villa 1",
+                            "deskripsi": "Villa 1",
+                            "lokasi": "Bandung",
+                            "kategori": [
+                              "Private Pool",
+                              "Family",
+                              "Luxury"
+                            ],
+                            "fasilitas": [
+                              "Wifi",
+                              "TV",
+                              "AC"
+                            ],
+                            "harga": 1000000,
+                            "foto_villa": [
+                              {
+                                "id": 1,
+                                "foto": "https://example.com/villa1"
+                              },
+                              {
+                                "id": 2,
+                                "foto": "https://example.com/villa2"
+                              }
+                            ]
+                          },
+                          "user": {
+                            "id": 1,
+                            "name": "User 1",
+                            "email": "user@gmail.com",
+                            "no_telepon": "081234567890",
+                            "foto_profile": "https://example.com/user"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }                          
           }
         },
         "security": [
@@ -7174,7 +7694,69 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Get all pesanan by user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Pesanan"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "description": "Success get all pesanan by user",
+                    "value": {
+                      "status": "success",
+                      "data": [
+                        {
+                          "id": 1,
+                          "tanggal_checkin": "2021-01-01",
+                          "tanggal_checkout": "2021-01-02",
+                          "jumlah_tamu": 2,
+                          "total_harga": 1000000,
+                          "villa": {
+                            "id": 1,
+                            "nama": "Villa 1",
+                            "deskripsi": "Villa 1",
+                            "lokasi": "Bandung",
+                            "kategori": [
+                              "Private Pool",
+                              "Family",
+                              "Luxury"
+                            ],
+                            "fasilitas": [
+                              "Wifi",
+                              "TV",
+                              "AC"
+                            ],
+                            "harga": 1000000,
+                            "foto_villa": [
+                              {
+                                "id": 1,
+                                "foto": "https://example.com/villa1"
+                              },
+                              {
+                                "id": 2,
+                                "foto": "https://example.com/villa2"
+                              }
+                            ]
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -7193,7 +7775,74 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Get all ulasan by owner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Ulasan"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "description": "Success get all ulasan by owner",
+                    "value": {
+                      "status": "success",
+                      "data": [
+                        {
+                          "id": 1,
+                          "komentar": "Komentar",
+                          "rating": 5,
+                          "villa": {
+                            "id": 1,
+                            "nama": "Villa 1",
+                            "deskripsi": "Villa 1",
+                            "lokasi": "Bandung",
+                            "kategori": [
+                              "Private Pool",
+                              "Family",
+                              "Luxury"
+                            ],
+                            "fasilitas": [
+                              "Wifi",
+                              "TV",
+                              "AC"
+                            ],
+                            "harga": 1000000,
+                            "foto_villa": [
+                              {
+                                "id": 1,
+                                "foto": "https://example.com/villa1"
+                              },
+                              {
+                                "id": 2,
+                                "foto": "https://example.com/villa2"
+                              }
+                            ]
+                          },
+                          "user": {
+                            "id": 1,
+                            "name": "User 1",
+                            "email": "user@gmail.com",
+                            "no_telepon": "081234567890",
+                            "foto_profile": "https://example.com/user"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -7212,7 +7861,74 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Get all ulasan by user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Ulasan"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "description": "Success get all ulasan by user",
+                    "value": {
+                      "status": "success",
+                      "data": [
+                        {
+                          "id": 1,
+                          "komentar": "Komentar",
+                          "rating": 5,
+                          "villa": {
+                            "id": 1,
+                            "nama": "Villa 1",
+                            "deskripsi": "Villa 1",
+                            "lokasi": "Bandung",
+                            "kategori": [
+                              "Private Pool",
+                              "Family",
+                              "Luxury"
+                            ],
+                            "fasilitas": [
+                              "Wifi",
+                              "TV",
+                              "AC"
+                            ],
+                            "harga": 1000000,
+                            "foto_villa": [
+                              {
+                                "id": 1,
+                                "foto": "https://example.com/villa1"
+                              },
+                              {
+                                "id": 2,
+                                "foto": "https://example.com/villa2"
+                              }
+                            ]
+                          },
+                          "user": {
+                            "id": 1,
+                            "name": "User 1",
+                            "email": "user@gmail.com",
+                            "no_telepon": "081234567890",
+                            "foto_profile": "https://example.com/user"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }                                              
           }
         },
         "security": [
@@ -7231,7 +7947,26 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Get current user",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "examples": {
+                  "success": {
+                    "description": "Success get current user",
+                    "value": {
+                      "id": 1,
+                      "name": "User",
+                      "email": "user@gmail.com",
+                      "no_telepon": "081234567890",
+                      "foto_profile": "https://example.com/user"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -7250,7 +7985,62 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Get all villa by owner",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Villa"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "description": "Success get all villa by owner",
+                    "value": {
+                      "status": "success",
+                      "data": [
+                        {
+                          "id": 1,
+                          "nama": "Villa 1",
+                          "deskripsi": "Villa 1",
+                          "lokasi": "Bandung",
+                          "kategori": [
+                            "Private Pool",
+                            "Family",
+                            "Luxury"
+                          ],
+                          "fasilitas": [
+                            "Wifi",
+                            "TV",
+                            "AC"
+                          ],
+                          "harga": 1000000,
+                          "foto_villa": [
+                            {
+                              "id": 1,
+                              "foto": "https://example.com/villa1"
+                            },
+                            {
+                              "id": 2,
+                              "foto": "https://example.com/villa2"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -7269,7 +8059,62 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Get all villa by admin",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Villa"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "description": "Success get all villa by admin",
+                    "value": {
+                      "status": "success",
+                      "data": [
+                        {
+                          "id": 1,
+                          "nama": "Villa 1",
+                          "deskripsi": "Villa 1",
+                          "lokasi": "Bandung",
+                          "kategori": [
+                            "Private Pool",
+                            "Family",
+                            "Luxury"
+                          ],
+                          "fasilitas": [
+                            "Wifi",
+                            "TV",
+                            "AC"
+                          ],
+                          "harga": 1000000,
+                          "foto_villa": [
+                            {
+                              "id": 1,
+                              "foto": "https://example.com/villa1"
+                            },
+                            {
+                              "id": 2,
+                              "foto": "https://example.com/villa2"
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -7288,7 +8133,31 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Change status villa by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "description": "Success change status villa by id",
+                    "value": {
+                      "status": "success",
+                      "message": "Success change status villa by id"
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -7307,7 +8176,38 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Get booked dates villa by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",                      
+                      "items": {
+                        "type": "string"
+                                        
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "description": "Success get booked dates villa by id",
+                    "value": {
+                      "status": "success",
+                      "data": [
+                        "2021-01-01",
+                        "2021-01-02"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -7326,7 +8226,51 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Get all photos villa by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "foto": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "description": "Success get all photos villa by id",
+                    "value": {
+                      "status": "success",
+                      "data": [
+                        {
+                          "id": 1,
+                          "foto": "https://example.com/villa1"
+                        },
+                        {
+                          "id": 2,
+                          "foto": "https://example.com/villa2"
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -7340,7 +8284,42 @@
         "parameters": [],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "Get photo villa by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "foto": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "description": "Success get photo villa by id",
+                    "value": {
+                      "status": "success",
+                      "data": {
+                        "id": 1,
+                        "foto": "https://example.com/villa1"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
@@ -7471,6 +8450,38 @@
           "no_telepon"
         ]
       },
+      "Owner": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer"
+          },
+          "nama": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          },
+          "no_telepon": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 15
+          },
+          "foto_profile": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "password",
+          "no_telepon"
+        ]
+      },
+      
       "Villa": {
         "type": "object",
         "properties": {
@@ -7595,12 +8606,7 @@
           "jumlah_orang": {
             "type": "integer"
           },
-          "nama_pembayar": {
-            "type": "string"
-          },
-          "email_pembayar": {
-            "type": "string"
-          },
+
           "catatan": {
             "type": "string"
           },
@@ -7674,6 +8680,12 @@
         "properties": {
           "id": {
             "type": "integer"
+          },
+          "nama_pembayar": {
+            "type": "string"
+          },
+          "email_pembayar": {
+            "type": "string"
           },
           "kode_pembayaran": {
             "type": "string"

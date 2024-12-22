@@ -5,7 +5,7 @@ services:
     ports:
       - "8000:3000"
     environment:
-      - MONGODB_URI=mongodb+srv://feryyuliarahman11:villaPlace@cluster0.jjoun.mongodb.net/villa-place
+      - MONGODB_URI=mongodb://user3:giggling-river-789@154.26.131.145:32017/user3_database?authSource=admin
     depends_on:
       - mongo
     volumes:
